@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dxjunkyard.ocr.repository.dao.mapper.DriversLicenseMapper">
+    <insert id="addDriversLicense">
+        insert into DriversLicenses (
+                                          user_id
+                                          ,full_name
+                                          ,address
+                                          ,birthday
+                                          ,expiration_date
+                                          ,note
+            ) values
+                     (
+                                          #{userId}
+                                          ,#{fullName}
+                                          ,#{address}
+                                          ,#{birthday}
+                                          ,#{expirationDate}
+                                          ,#{note}
+                    )
+    </insert>
+
+    <select id="getDriverLicense" resultType="com.dxjunkyard.ocr.domain.DriversLicense">
+        select drivers_license_id as driversLicenseId
+            , user_id as userId
+            , full_name as fullName
+            , address
+            , birthday
+            , expiration_date as expirationDate
+            , note
+        from DriversLicenses
+        where user_id = #{user_id}
+    </select>
+</mapper>

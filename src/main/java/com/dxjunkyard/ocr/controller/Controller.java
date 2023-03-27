@@ -1,7 +1,7 @@
 package com.dxjunkyard.ocr.controller;
 
 import com.dxjunkyard.ocr.domain.response.NormalResponse;
-import com.dxjunkyard.ocr.service.RentalService;
+import com.dxjunkyard.ocr.service.OcrService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ public class Controller {
 
 
     @Autowired
-    private RentalService ocrService;
+    private OcrService ocrService;
 
     @Autowired
     protected ResourceLoader resourceLoader;
@@ -39,13 +39,14 @@ public class Controller {
             @RequestParam("file") MultipartFile file) {
         logger.info("ocr API");
         try {
+            String user_id = "xxxxx_user_id_xxxxx";
             byte[] bytes = file.getBytes();
             //Path path = Paths.get(UPLOAD_DIR + "/" + file.getOriginalFilename());
-            // 書き込むディレクトリが存在しない場合は作成する
             String cd = resourceLoader.getResource("classpath:static").getFile().getAbsolutePath();
             Path path = Paths.get(cd + File.separator + "uploads" + File.separator + file.getOriginalFilename());
             Files.write(path, bytes);
-            //ocrService.reserve(request);
+
+            ocrService.scanDriversLicense(user_id, path.toString());
             return NormalResponse.builder().result("OK").build();
         } catch (Exception e) {
             logger.debug("ocr" + e.getMessage());
