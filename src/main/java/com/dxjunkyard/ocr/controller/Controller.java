@@ -1,6 +1,7 @@
 package com.dxjunkyard.ocr.controller;
 
 import com.dxjunkyard.ocr.domain.response.NormalResponse;
+import com.dxjunkyard.ocr.service.FileService;
 import com.dxjunkyard.ocr.service.OcrService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -28,6 +29,9 @@ public class Controller {
     private OcrService ocrService;
 
     @Autowired
+    private FileService fileService;
+
+    @Autowired
     protected ResourceLoader resourceLoader;
 
     /**
@@ -40,13 +44,9 @@ public class Controller {
         logger.info("ocr API");
         try {
             String user_id = "xxxxx_user_id_xxxxx";
-            byte[] bytes = file.getBytes();
-            //Path path = Paths.get(UPLOAD_DIR + "/" + file.getOriginalFilename());
-            String cd = resourceLoader.getResource("classpath:static").getFile().getAbsolutePath();
-            Path path = Paths.get(cd + File.separator + "uploads" + File.separator + file.getOriginalFilename());
-            Files.write(path, bytes);
-
-            ocrService.scanDriversLicense(user_id, path.toString());
+            String cpath = resourceLoader.getResource("classpath:static").getFile().getAbsolutePath();
+            String upldFile = fileService.putDocument(user_id,cpath,file);
+            ocrService.scanDriversLicense(user_id, upldFile);
             return NormalResponse.builder().result("OK").build();
         } catch (Exception e) {
             logger.debug("ocr" + e.getMessage());
