@@ -20,8 +20,10 @@ public class FileService {
      *
      */
     public boolean createUserDir(String userDirPath) {
+        logger.info("createUserDir: " + userDirPath);
         File userDir = new File(userDirPath);
 
+        logger.info("check user dir : " + userDir.getAbsolutePath());
         if (!userDir.exists()) {
             logger.info("create user dir : " + userDir.getAbsolutePath());
             boolean result = userDir.mkdirs();
