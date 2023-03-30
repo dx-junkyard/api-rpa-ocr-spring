@@ -23,10 +23,13 @@ public class FileService {
         File userDir = new File(userDirPath);
 
         if (!userDir.exists()) {
+            logger.info("create user dir : " + userDir.getAbsolutePath());
             boolean result = userDir.mkdirs();
             return result;
+        } else {
+            logger.info("already exist user dir : " + userDir.getAbsolutePath());
+            return false;
         }
-        return false;
     }
 
     /*

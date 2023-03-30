@@ -22,8 +22,6 @@ import java.nio.file.Paths;
 @Slf4j
 public class Controller {
     private Logger logger = LoggerFactory.getLogger(Controller.class);
-    private final String UPLOAD_DIR = "/uploads"; // ファイルを保存するディレクトリ
-
 
     @Autowired
     private OcrService ocrService;
@@ -44,7 +42,10 @@ public class Controller {
         logger.info("ocr API");
         try {
             String user_id = "xxxxx_user_id_xxxxx";
+            logger.info("pre resourceLoader.getResource");
             String cpath = resourceLoader.getResource("classpath:static").getFile().getAbsolutePath();
+            logger.info("after resourceLoader.getResource:" + cpath);
+            logger.info("pre fileService.putDocument");
             String upldFile = fileService.putDocument(user_id,cpath,file);
             ocrService.scanDriversLicense(user_id, upldFile);
             return NormalResponse.builder().result("OK").build();
