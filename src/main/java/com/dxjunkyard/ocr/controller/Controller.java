@@ -11,17 +11,12 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-
 @RestController
 @RequestMapping("/v1/api")
 @Slf4j
 public class Controller {
     private Logger logger = LoggerFactory.getLogger(Controller.class);
+    //private final String UPLOAD_DIR = "/uploads"; // ファイルを保存するディレクトリ
 
     @Autowired
     private OcrService ocrService;
@@ -42,15 +37,14 @@ public class Controller {
         logger.info("ocr API");
         try {
             String user_id = "xxxxx_user_id_xxxxx";
-            logger.info("pre resourceLoader.getResource");
-            String cpath = resourceLoader.getResource("classpath:static").getFile().getAbsolutePath();
-            logger.info("after resourceLoader.getResource:" + cpath);
-            logger.info("pre fileService.putDocument");
-            String upldFile = fileService.putDocument(user_id,cpath,file);
+            //String cpath = resourceLoader.getResource("classpath:static").getFile().getAbsolutePath();
+            //logger.info("after resourceLoader.getResource:" + cpath);
+            //String upldFile = fileService.putDocument(user_id,cpath,file);
+            String upldFile = fileService.putDocument(user_id,file);
             ocrService.scanDriversLicense(user_id, upldFile);
             return NormalResponse.builder().result("OK").build();
         } catch (Exception e) {
-            logger.debug("ocr" + e.getMessage());
+            logger.info("ocr" + e.getMessage());
             return NormalResponse.builder().result("NG").build();
         }
     }

@@ -1,6 +1,7 @@
 package com.dxjunkyard.ocr.service;
 
 import com.dxjunkyard.ocr.controller.Controller;
+import lombok.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,12 +15,14 @@ import java.nio.file.Paths;
 @Service
 public class FileService {
     private Logger logger = LoggerFactory.getLogger(FileService.class);
-    private final String UPLOAD_DIR = "/uploads"; // ファイルを保存するディレクトリ
+    private final String UPLOAD_DIR = "/tmp/rpa-ocr/uploads"; // ファイルを保存するディレクトリ
 
     /*
      *
      */
+
     public boolean createUserDir(String userDirPath) {
+
         logger.info("createUserDir: " + userDirPath);
         File userDir = new File(userDirPath);
 
@@ -37,12 +40,14 @@ public class FileService {
     /*
      * アップロードされたファイルを適切な場所に保管し、保管先のパスを返す
      */
-    public String putDocument(String userId, String cpath, MultipartFile file) {
+    //public String putDocument(String userId, String cpath, MultipartFile file) {
+    public String putDocument(String userId, MultipartFile file) {
         try {
             byte[] bytes = file.getBytes();
             //Path path = Paths.get(UPLOAD_DIR + "/" + file.getOriginalFilename());
             // todo : userIdごとの保管ディレクトリを作成し、保管先のパスに含める
-            String userDir = cpath + File.separator + "uploads" + File.separator + userId;
+            //String userDir = cpath + File.separator + "uploads" + File.separator + userId;
+            String userDir = UPLOAD_DIR + File.separator + "uploads" + File.separator + userId;
             createUserDir(userDir);
             Path path = Paths.get(userDir + File.separator + file.getOriginalFilename());
             Files.write(path, bytes);
