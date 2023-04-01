@@ -21,7 +21,7 @@ public class OcrService {
     @Autowired
     ClovaOcrRestClient clovaOcrRestClient;
 
-    public void scanDriversLicense(String user_id, String filename) {
+    public void scanDocument(String user_id, String filename) {
         try {
             ClovaOcrResponse ocrResponse = clovaOcrRestClient.clovaOcr(filename);
             DriversLicense license = DriversLicenseDto.convertOcr(ocrResponse);

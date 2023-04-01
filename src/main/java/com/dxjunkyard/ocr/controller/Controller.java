@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class Controller {
     private Logger logger = LoggerFactory.getLogger(Controller.class);
-    //private final String UPLOAD_DIR = "/uploads"; // ファイルを保存するディレクトリ
 
     @Autowired
     private OcrService ocrService;
@@ -30,18 +29,36 @@ public class Controller {
     /**
      *
      */
-    @PostMapping("/drivers-license-upload")
+    //@PostMapping("/drivers-license-upload")
+    @PostMapping("/health-insurance-card")
     @ResponseBody
     public NormalResponse driversLicenseUpload(
             @RequestParam("file") MultipartFile file) {
         logger.info("ocr API");
         try {
             String user_id = "xxxxx_user_id_xxxxx";
-            //String cpath = resourceLoader.getResource("classpath:static").getFile().getAbsolutePath();
-            //logger.info("after resourceLoader.getResource:" + cpath);
-            //String upldFile = fileService.putDocument(user_id,cpath,file);
             String upldFile = fileService.putDocument(user_id,file);
-            ocrService.scanDriversLicense(user_id, upldFile);
+            ocrService.scanDocument(user_id, upldFile);
+            return NormalResponse.builder().result("OK").build();
+        } catch (Exception e) {
+            logger.info("ocr" + e.getMessage());
+            return NormalResponse.builder().result("NG").build();
+        }
+    }
+
+    /**
+     *
+     */
+    @PostMapping("/drivers-license-upload-local")
+    @ResponseBody
+    public NormalResponse driversLicenseUploadLocalDebug(
+            @RequestParam("file") MultipartFile file) {
+        logger.info("ocr API local debug");
+        try {
+            String user_id = "xxxxx_user_id_xxxxx";
+            String cpath = resourceLoader.getResource("classpath:static").getFile().getAbsolutePath();
+            String upldFile = fileService.putDocumentLocalDebug(user_id,cpath,file);
+            ocrService.scanDocument(user_id, upldFile);
             return NormalResponse.builder().result("OK").build();
         } catch (Exception e) {
             logger.info("ocr" + e.getMessage());

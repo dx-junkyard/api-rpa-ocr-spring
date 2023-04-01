@@ -40,13 +40,28 @@ public class FileService {
     /*
      * アップロードされたファイルを適切な場所に保管し、保管先のパスを返す
      */
-    //public String putDocument(String userId, String cpath, MultipartFile file) {
+    public String putDocumentLocalDebug(String userId, String cpath, MultipartFile file) {
+        try {
+            byte[] bytes = file.getBytes();
+            // userIdごとの保管ディレクトリを作成し、保管先のパスに含める
+            String userDir = cpath + File.separator + "uploads" + File.separator + userId;
+            createUserDir(userDir);
+            Path path = Paths.get(userDir + File.separator + file.getOriginalFilename());
+            Files.write(path, bytes);
+            return path.toString();
+        } catch (Exception e) {
+            logger.debug("putDocument" + e.getMessage());
+        }
+        return null;
+    }
+
+    /*
+     * アップロードされたファイルを適切な場所に保管し、保管先のパスを返す
+     */
     public String putDocument(String userId, MultipartFile file) {
         try {
             byte[] bytes = file.getBytes();
-            //Path path = Paths.get(UPLOAD_DIR + "/" + file.getOriginalFilename());
-            // todo : userIdごとの保管ディレクトリを作成し、保管先のパスに含める
-            //String userDir = cpath + File.separator + "uploads" + File.separator + userId;
+            // userIdごとの保管ディレクトリを作成し、保管先のパスに含める
             String userDir = UPLOAD_DIR + File.separator + "uploads" + File.separator + userId;
             createUserDir(userDir);
             Path path = Paths.get(userDir + File.separator + file.getOriginalFilename());
